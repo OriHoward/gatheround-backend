@@ -4,11 +4,14 @@ from Resources.Event import Event
 from dotenv import load_dotenv
 import os
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+
 
 load_dotenv()
 
 # https://flask-restful.readthedocs.io/en/latest/quickstart.html
 app = Flask(__name__)
+CORS(app)
 print(os.getenv("DB_URL"))
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DB_URL")
 db = SQLAlchemy(app) # ORM = Object-relational mapping
