@@ -9,7 +9,7 @@ services:
 #    command: --default-authentication-plugin=mysql_native_password
 #    restart: always
     environment:
-      MYSQL_DATABASE: gatheroud
+      MYSQL_DATABASE: gatheround
       MYSQL_ROOT_PASSWORD: example
     volumes:
       - ./mysql-data:/var/lib/mysql
