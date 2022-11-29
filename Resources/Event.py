@@ -15,9 +15,12 @@ class Event(Resource):
         name = received_data.get("name")
         address = received_data.get("address")
         description = received_data.get("description")
-        formated_date = datetime.strptime(received_data.get("event_date"), "%d/%m/%Y")
-        curr_event: EventRecord = EventRecord(user_id=user_id, name=name, address=address, event_date=formated_date,
+        formatted_date = datetime.strptime(received_data.get("event_date"), "%d/%m/%Y")
+        curr_event: EventRecord = EventRecord(user_id=user_id, name=name, address=address, event_date=formatted_date,
                                               description=description)
         db.session.add(curr_event)
         db.session.commit()
         return {'status': "accepted"}
+
+    def put(self):
+        pass
