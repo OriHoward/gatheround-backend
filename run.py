@@ -1,12 +1,14 @@
 from Resources.Event import Event
 from Resources.User import User
 from Resources.Login import Login
+from Resources.Refresh import Refresh
 from server import api, app, db
 
 # This initializes the routers
 api.add_resource(Event, '/events')
 api.add_resource(User, '/users')
 api.add_resource(Login, '/login')
+api.add_resource(Refresh, '/refresh')
 
 if __name__ == '__main__':
     # db.drop_all()
