@@ -13,11 +13,10 @@ class Login(Resource):
 
     def post(self):
         received_data = request.json
-        username = received_data.get("username")
-        user_found: UserRecord = UserRecord.query.filter_by(username=username).first()
+        email = received_data.get("email")
+        user_found: UserRecord = UserRecord.query.filter_by(email=email).first()
         received_pass = received_data.get("password").encode('utf-8')
         stored_pw = user_found.password.encode('utf-8')
-
         if bcrypt.checkpw(received_pass, stored_pw):
             access_token = create_access_token(identity=user_found.serialize(), fresh=True)
             refresh_token = create_refresh_token(identity=user_found.serialize())

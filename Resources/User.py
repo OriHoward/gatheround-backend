@@ -15,9 +15,10 @@ class User(Resource):
         received_data = request.json
 
         curr_user = UserRecord(
-            username=received_data.get("username"),
+            email=received_data.get("email"),
             password=bcrypt.hashpw(received_data.get("password").encode('utf-8'), salt),
-            email=received_data.get("email")
+            first_name=received_data.get("firstName"),
+            last_name=received_data.get("lastName"),
         )
         db.session.add(curr_user)
         db.session.commit()
