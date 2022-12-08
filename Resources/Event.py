@@ -11,13 +11,13 @@ class Event(Resource):
 
     def post(self):
         received_data = request.json
-        user_id = received_data.get("user_id")
         name = received_data.get("name")
+        formatted_date = datetime.strptime(received_data.get("eventDate"), "%d/%m/%Y")
         address = received_data.get("address")
         description = received_data.get("description")
-        formatted_date = datetime.strptime(received_data.get("event_date"), "%d/%m/%Y")
-        curr_event: EventRecord = EventRecord(user_id=user_id, name=name, address=address, event_date=formatted_date,
-                                              description=description)
+        limit_attending = received_data.get("limitAttending")
+        curr_event: EventRecord = EventRecord(name=name, event_date=formatted_date, address=address,
+                                              description=description, limit_attending=limit_attending)
         db.session.add(curr_event)
         db.session.commit()
         return {'status': "accepted"}
