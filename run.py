@@ -11,7 +11,7 @@ api.add_resource(Event, '/events')
 api.add_resource(User, '/users')
 api.add_resource(Login, '/login')
 api.add_resource(Refresh, '/refresh')
-api.add_resource(Invite, '/invite')
+api.add_resource(Invite, '/invites')
 api.add_resource(Business, '/business')
 
 if __name__ == '__main__':
