@@ -1,13 +1,14 @@
 from server import db
+from sqlalchemy import ForeignKey
 
 
 class BusinessRecord(db.Model):
-    id = db.Column(db.Integer, unique=True, primary_key=True, foreign_key=True)
+    id = db.Column(db.Integer, ForeignKey('user_record.id'), default=0, primary_key=True)
     profession = db.Column(db.String(100), nullable=False)
     country = db.Column(db.String(100), nullable=False)
     city = db.Column(db.String(100), nullable=False)
     phone_number = db.Column(db.String(15), nullable=False)
-    visible = db.Clumn(db.Boolean, default=True)
+    visible = db.Column(db.Boolean, default=True)
 
     def serialize(self):
         return {
