@@ -11,7 +11,7 @@ class Business(Resource):
     def post(self):
         received_data = request.json
         curr_business = BusinessRecord(
-            id=received_data.get("id"),
+            id=received_data.get("userId"),
             profession=received_data.get("profession"),
             country=received_data.get("country"),
             city=received_data.get("city"),
