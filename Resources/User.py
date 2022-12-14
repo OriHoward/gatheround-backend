@@ -23,4 +23,4 @@ class User(Resource):
         db.session.add(curr_user)
         db.session.commit()
         print(received_data)
-        return {'status': "accepted"}
+        return {'status': "accepted", 'id': curr_user.id}
