@@ -20,7 +20,7 @@ class Event(Resource):
                                               description=description, limit_attending=limit_attending)
         db.session.add(curr_event)
         db.session.commit()
-        return {'status': "accepted"}
+        return {'status': "accepted", 'eventId': curr_event.id}
 
     def put(self):
         pass
