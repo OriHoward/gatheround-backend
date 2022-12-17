@@ -16,5 +16,5 @@ class UserRecord(db.Model):
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "join_date": self.join_date,
+            "join_date": self.join_date.strftime('%d/%m/%Y'),
         }
