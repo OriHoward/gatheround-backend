@@ -1,8 +1,10 @@
 from flask_restful import Resource, reqparse
 from Models.BusinessRecord import BusinessRecord
+from flask_jwt_extended import jwt_required
 
 
 class BusinessSearch(Resource):
+    @jwt_required()
     def get(self):
         parser = reqparse.RequestParser()
         parser.add_argument('profession', location='args', help='bad profession provided')
