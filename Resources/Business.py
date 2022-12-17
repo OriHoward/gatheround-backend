@@ -13,6 +13,7 @@ class Business(Resource):
         return {"userId": business_info.id, "profession": business_info.profession,
                 "country": business_info.country, "city": business_info.city,
                 "phoneNumber": business_info.phone_number, "visible": business_info.visible}
+
     def post(self):
         received_data = request.json
         curr_business = BusinessRecord(
