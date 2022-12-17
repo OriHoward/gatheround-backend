@@ -13,7 +13,7 @@ class EventRecord(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "event_date": self.event_date,
+            "event_date": self.event_date.strftime('%d/%m/%Y'),
             "address": self.address,
             "description": self.description,
             "limit_attending": self.limit_attending
