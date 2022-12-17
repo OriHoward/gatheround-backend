@@ -2,6 +2,8 @@ from flask_restful import Resource
 from flask import request
 from Models.EventRecord import EventRecord
 from Models.HostRecord import HostRecord
+from Models.BusinessRecord import BusinessRecord
+from Models.InviteRecord import InviteRecord
 from datetime import datetime
 from server import db
 from flask_jwt_extended import get_jwt_identity
@@ -9,8 +11,20 @@ from flask_jwt_extended import jwt_required
 
 
 class Event(Resource):
+    @jwt_required()
     def get(self):
-        return {"a": "1"}
+        # todo: get invites
+        curr_user = get_jwt_identity()
+        curr_user_id = curr_user.get("id")
+        is_business: BusinessRecord = BusinessRecord.query.filter_by(id=curr_user_id).first() is not None
+        response_data = dict()
+        if is_business is False:
+            # get events that user is hosting
+            curr_events_hosting: EventRecord = EventRecord.query.join(HostRecord) \
+                .filter(HostRecord.user_id == curr_user_id) \
+                .order_by(EventRecord.event_date).limit(2).all()
+            response_data["my_events"] = list(map(lambda entry: entry.serialize(), curr_events_hosting))
+        return response_data
 
     @jwt_required()
     def post(self):
