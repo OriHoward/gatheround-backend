@@ -4,13 +4,18 @@ from Models.UserRecord import UserRecord
 from Models.BusinessRecord import BusinessRecord
 import bcrypt
 from server import db
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
 
 salt = bcrypt.gensalt()
 
 
 class User(Resource):
+
+    @jwt_required()
     def get(self):
-        return {"a": "1"}
+        curr_user: UserRecord = get_jwt_identity()
+        return curr_user
 
     def post(self):
         received_data = request.json
