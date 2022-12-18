@@ -36,7 +36,7 @@ class Event(Resource):
         current_user = get_jwt_identity()
 
         name = received_data.get("name")
-        formatted_date = datetime.strptime(received_data.get("eventDate"), "%d/%m/%Y")
+        formatted_date = datetime.strptime(received_data.get("eventDate"), '%d/%m/%Y %H:%M')
         address = received_data.get("address")
         description = received_data.get("description")
         limit_attending = received_data.get("limitAttending")
