@@ -2,7 +2,6 @@ from flask_restful import Resource
 from flask import request
 from Models.UserRecord import UserRecord
 from Models.BusinessRecord import BusinessRecord
-# from Jwt.jwt_handler import generate_jwt
 import bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import set_access_cookies

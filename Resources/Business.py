@@ -36,15 +36,12 @@ class Business(Resource):
         business_record: BusinessRecord = BusinessRecord.query.filter_by(id=business_id).first()
         if business_record:
             fields = ["profession", "country", "city", "phoneNumber", "visible"]
+            # Iterating through all the fields and updating accordingly if necessary
             for field in fields:
                 if field in received_data:
+                    # Updates the DataBase
                     setattr(business_record, field, received_data.get(field))
             db.session.commit()
             return {"status": "updated"}
         else:
             return {"error": "business record not found"}, 404
-
-        pass
-
-    def delete(self):
-        pass
