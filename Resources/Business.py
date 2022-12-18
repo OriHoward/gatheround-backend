@@ -29,7 +29,21 @@ class Business(Resource):
         print(received_data)
         return {"status": "accepted"}
 
+    @jwt_required()
     def put(self):
+        received_data = request.json
+        business_id = get_jwt_identity().get("id")
+        business_record: BusinessRecord = BusinessRecord.query.filter_by(id=business_id).first()
+        if business_record:
+            fields = ["profession", "country", "city", "phoneNumber", "visible"]
+            for field in fields:
+                if field in received_data:
+                    setattr(business_record, field, received_data.get(field))
+            db.session.commit()
+            return {"status": "updated"}
+        else:
+            return {"error": "business record not found"}, 404
+
         pass
 
     def delete(self):
