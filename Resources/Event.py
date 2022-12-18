@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from flask import request
 from Models.EventRecord import EventRecord
 from Models.HostRecord import HostRecord
@@ -14,6 +14,9 @@ class Event(Resource):
     @jwt_required()
     def get(self):
         # todo: get invites
+        parser = reqparse.RequestParser()
+        parser.add_argument('host-limit', location='args')
+        args = parser.parse_args()
         curr_user = get_jwt_identity()
         curr_user_id = curr_user.get("id")
         is_business: BusinessRecord = BusinessRecord.query.filter_by(id=curr_user_id).first() is not None
@@ -22,7 +25,8 @@ class Event(Resource):
             # get events that user is hosting
             curr_events_hosting: EventRecord = EventRecord.query.join(HostRecord) \
                 .filter(HostRecord.user_id == curr_user_id) \
-                .order_by(EventRecord.event_date).limit(2).all()
+                .order_by(EventRecord.event_date).limit(args.get("host-limit")).all()
+            # if args.get("host-limit") is not provided- value is None and limit(None) returns all instances
             response_data["my_events"] = list(map(lambda entry: entry.serialize(), curr_events_hosting))
         return response_data
 
