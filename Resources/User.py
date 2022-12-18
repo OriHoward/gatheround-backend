@@ -14,8 +14,9 @@ class User(Resource):
 
     @jwt_required()
     def get(self):
-        curr_user: UserRecord = get_jwt_identity()
-        return curr_user
+        user_id = get_jwt_identity().get('id')
+        curr_user: UserRecord = UserRecord.query.filter_by(id=user_id).first()
+        return curr_user.serialize()
 
     def post(self):
         received_data = request.json
@@ -51,3 +52,14 @@ class User(Resource):
         db.session.commit()
 
         return {'status': "accepted"}
+
+    @jwt_required()
+    def put(self):
+        received_data = request.json
+        user_id = get_jwt_identity().get('id')
+        curr_user: UserRecord = UserRecord.query.filter_by(id=user_id).first()
+        curr_user.first_name = received_data.get('firstName')
+        curr_user.last_name = received_data.get('lastName')
+        curr_user.email = received_data.get('email')
+        db.session.commit()
+        return {"status": "accepted"}
