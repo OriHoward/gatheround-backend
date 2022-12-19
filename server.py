@@ -23,5 +23,5 @@ app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=30)
 CORS(app)  # A security feature that blocks web pages from making requests to a different domains
 db = SQLAlchemy(app)  # ORM = Object-relational mapping
 app.app_context().push()  # Returns an object which stores the info of the app, then pushes it onto the stack
-api = Api(app)  # A method in the Flask web framework that is used to push the application context onto the stack.
+api = Api(app)  # Adds flask_restful
 jwt = JWTManager(app)  # Adding JSON Web Token (JWT) authentication to a Flask application
