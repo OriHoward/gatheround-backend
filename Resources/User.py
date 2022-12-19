@@ -14,11 +14,17 @@ class User(Resource):
 
     @jwt_required()
     def get(self):
+        """
+        The get request returns the user's information.
+        """
         user_id = get_jwt_identity().get('id')
         curr_user: UserRecord = UserRecord.query.filter_by(id=user_id).first()
         return curr_user.serialize()
 
     def post(self):
+        """
+        The post request happens when a new user is created.
+        """
         received_data = request.json
         is_business: bool = received_data.get("isBusiness", False)
         curr_user = UserRecord(
@@ -41,6 +47,7 @@ class User(Resource):
             phone_number=received_data.get("phoneNumber"),
             visible=received_data.get("visible"))
 
+        # start a transaction: if either insertions were unsuccessful- will rollback changes
         db.session.begin_nested()
 
         # Insert the first object and commit the changes
@@ -55,6 +62,9 @@ class User(Resource):
 
     @jwt_required()
     def put(self):
+        """
+        The put request updates the user's information in the database.
+        """
         received_data = request.json
         user_id = get_jwt_identity().get('id')
         curr_user: UserRecord = UserRecord.query.filter_by(id=user_id).first()

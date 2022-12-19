@@ -13,12 +13,16 @@ from flask_jwt_extended import jwt_required
 class Event(Resource):
     @jwt_required()
     def get(self):
-        # todo: get invites
+        """
+        The get request returns events created by the Host user.
+        """
+        # RequestParser enables adding and parsing arguments of a single request
         parser = reqparse.RequestParser()
         parser.add_argument('host-limit', location='args')
         args = parser.parse_args()
         curr_user = get_jwt_identity()
         curr_user_id = curr_user.get("id")
+        # check if user is a Host
         is_business: BusinessRecord = BusinessRecord.query.filter_by(id=curr_user_id).first() is not None
         response_data = dict()
         if is_business is False:
@@ -32,6 +36,9 @@ class Event(Resource):
 
     @jwt_required()
     def post(self):
+        """
+        The post request inserts the data into the Event and Host Record tables (using a transaction).
+        """
         received_data = request.json
         current_user = get_jwt_identity()
 
