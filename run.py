@@ -6,6 +6,7 @@ from Resources.Invite import Invite
 from Resources.Business import Business
 from Resources.BusinessSearch import BusinessSearch
 from Resources.BusinessSearchMetadata import BusinessSearchMetadata
+from Resources.BusinessPackage import BusinessPackage
 from server import api, app, db
 
 # This initializes the routers
@@ -17,6 +18,7 @@ api.add_resource(Invite, '/invites')
 api.add_resource(Business, '/business')
 api.add_resource(BusinessSearch, '/business-search')
 api.add_resource(BusinessSearchMetadata, '/business-search-meta')
+api.add_resource(BusinessPackage, '/business-package')
 
 if __name__ == '__main__':
     # db.drop_all()
