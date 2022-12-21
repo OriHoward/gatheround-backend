@@ -3,7 +3,8 @@ from sqlalchemy import ForeignKey
 
 
 class BusinessPackageRecord(db.Model):
-    id = db.Column(db.Integer, ForeignKey('business_record.id'), primary_key=True)
+    id = db.Column(db.Integer, unique=True, primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey("user_record.id"))
     package_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
     price = db.Column(db.Integer, nullable=False)
