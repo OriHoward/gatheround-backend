@@ -44,3 +44,16 @@ class BusinessPackage(Resource):
     @jwt_required()
     def put(self):
         pass
+
+    @jwt_required()
+    def delete(self):
+        received_data = request.json
+        package_id = received_data.get("packageId")
+        business_id = get_jwt_identity().get("id")
+        try:
+            db.session.query(BusinessPackageRecord).filter_by(id=package_id, user_id=business_id).delete()
+            db.session.commit()
+            return {"status": "successful"}
+        except Exception as e:
+            print(e)
+            return {"status": "Failed"}
