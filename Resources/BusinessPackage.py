@@ -15,12 +15,11 @@ class BusinessPackage(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('package-limit', location='args')
         args = parser.parse_args()
-        all_packages: BusinessPackageRecord = db.session.query(BusinessPackageRecord). \
-            order_by(BusinessPackageRecord.price.desc()).limit(args.get("package-limit")).all()
+        business_id = get_jwt_identity().get("id")
+        all_packages: BusinessPackageRecord = db.session.query(BusinessPackageRecord).filter_by(user_id=business_id). \
+            order_by(BusinessPackageRecord.price.desc()).limit(args.get("package-limit", 3)).all()
         my_packages = list(map(lambda entry: entry.serialize(), all_packages))
         return {"my_packages": my_packages}
-
-        pass
 
     @jwt_required()
     def post(self):
