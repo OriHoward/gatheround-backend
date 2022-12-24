@@ -11,11 +11,6 @@ class BusinessSearch(Resource):
         parser.add_argument('desiredProfession', location='args', help='bad profession provided')
         parser.add_argument('city', location='args', help='bad city provided')
         args = parser.parse_args()
-        # ilike is a case insensitive LIKE
-        # relevant_businesses: list[BusinessRecord] = BusinessRecord.query.filter(
-        #     BusinessRecord.profession.ilike(f'%{args.get("profession")}%'),
-        #     BusinessRecord.visible == True).all()
-
         relevant_businesses: list = BusinessRecord.query \
             .join(BusinessPackageRecord, BusinessRecord.id == BusinessPackageRecord.user_id).filter(
             BusinessRecord.visible == True)
