@@ -11,8 +11,8 @@ class BusinessSearchMetadata(Resource):
             distinct_professions_record: list[BusinessRecord] = db.session.query(
                 BusinessRecord.profession).distinct().all()
             distinct_cities_record: list[BusinessRecord] = db.session.query(BusinessRecord.city).distinct().all()
-            distinct_professions = [prof[0] for prof in distinct_cities_record]
-            distinct_cities = [cityrec[0] for cityrec in distinct_professions_record]
+            distinct_professions = [prof[0] for prof in distinct_professions_record]
+            distinct_cities = [cityrec[0] for cityrec in distinct_cities_record]
             return {
                 'distinctCities': distinct_cities,
                 'distinctProfessions': distinct_professions
