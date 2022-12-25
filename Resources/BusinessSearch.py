@@ -11,7 +11,7 @@ class BusinessSearch(Resource):
         parser.add_argument('desiredProfession', location='args', help='bad profession provided')
         parser.add_argument('city', location='args', help='bad city provided')
         args = parser.parse_args()
-        relevant_businesses: list = BusinessRecord.query \
+        relevant_businesses = BusinessRecord.query \
             .join(BusinessPackageRecord, BusinessRecord.id == BusinessPackageRecord.user_id).filter(
             BusinessRecord.visible == True)
 
@@ -21,6 +21,7 @@ class BusinessSearch(Resource):
         if args.get("city"):
             relevant_businesses = relevant_businesses.filter(BusinessRecord.city.ilike(f'%{args.get("city")}%'))
 
-        relevant_businesses = relevant_businesses.with_entities(BusinessRecord, BusinessPackageRecord).all()
+        relevant_businesses = relevant_businesses.with_entities(BusinessRecord, BusinessPackageRecord).order_by(
+            BusinessPackageRecord.price).all()
         return {'results': [{**(bus_entry.serialize()), **(packge_entry.serialize())} for bus_entry, packge_entry in
                             relevant_businesses]}
