@@ -10,7 +10,8 @@ from Resources.BusinessPackage import BusinessPackage
 from server import api, app, db
 
 # This initializes the routers
-api.add_resource(Event, '/events')
+api.add_resource(Event, '/events', endpoint='events')
+api.add_resource(Event, '/events/<int:event_id>', endpoint='event')
 api.add_resource(User, '/users')
 api.add_resource(Login, '/login')
 api.add_resource(Refresh, '/refresh')

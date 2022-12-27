@@ -64,5 +64,17 @@ class Event(Resource):
         db.session.commit()
         return {'status': "accepted"}
 
+    @jwt_required()
+    def delete(self, event_id):
+        current_user = get_jwt_identity()
+        user_id = current_user.get("id")
+        # delete from Host table
+        db.session.begin_nested()
+        HostRecord.query.filter_by(event_id=event_id, user_id=user_id).delete()
+        db.session.commit()
+        EventRecord.query.filter_by(id=event_id).delete()
+        db.session.commit()
+        return {'status': 'accepted'}, 200
+
     def put(self):
         pass
