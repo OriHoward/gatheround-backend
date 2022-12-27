@@ -3,7 +3,6 @@ from flask import request
 from Models.EventRecord import EventRecord
 from Models.HostRecord import HostRecord
 from Models.BusinessRecord import BusinessRecord
-from Models.InviteRecord import InviteRecord
 from datetime import datetime
 from server import db
 from flask_jwt_extended import get_jwt_identity
