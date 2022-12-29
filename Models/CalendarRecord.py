@@ -9,11 +9,11 @@ class CalendarRecord(db.Model):
     category = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
 
-    def serializable(self):
+    def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
-            "date": self.date,
+            "date": self.date.strftime('%d/%m/%Y'),
             "category": self.category,
             "description": self.description
         }
