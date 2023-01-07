@@ -31,6 +31,8 @@ class BookedDates(Resource):
         parser = reqparse.RequestParser()
 
         user_id = get_jwt_identity().get("id")
-        booked_dates = CalendarRecord.query.filter_by(user_id=user_id).order_by(CalendarRecord.date).all()
+        booked_dates = CalendarRecord.query \
+            .filter(CalendarRecord.user_id == user_id, CalendarRecord.date > datetime.now()) \
+            .order_by(CalendarRecord.date).all()
         response_data = [record.serialize() for record in booked_dates]
         return response_data
