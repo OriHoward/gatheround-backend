@@ -16,7 +16,7 @@ class RequestRecord(db.Model):
     package_id = db.Column(db.Integer, ForeignKey('business_package_record.id'))
     event_id = db.Column(db.Integer, ForeignKey('event_record.id'))
     description = db.Column(db.String(200), nullable=False)
-    request_status = db.Column(db.Integer, default=IsAttendingStatus.PENDING)
+    request_status = db.Column(db.Integer, default=IsAttendingStatus.PENDING.value)
 
     def serialize(self):
         return {
