@@ -5,6 +5,16 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy import desc
 
 
+def format_search_response(business_entry, package_entry):
+    result = {"business_id": business_entry.get("id"), "package_id": package_entry.get("id"),
+              "phone_number": business_entry.get("phone_number"), "country": business_entry.get("country"),
+              "city": business_entry.get("city"), "package_name": package_entry.get("package_name"),
+              "description": package_entry.get("description"), "currency": package_entry.get("currency"),
+              "price": package_entry.get("price")}
+
+    return result
+
+
 class BusinessSearch(Resource):
     @jwt_required()
     def get(self):
@@ -27,5 +37,5 @@ class BusinessSearch(Resource):
         else:
             relevant_businesses = relevant_businesses.order_by(desc(BusinessPackageRecord.price))
         relevant_businesses = relevant_businesses.with_entities(BusinessRecord, BusinessPackageRecord).all()
-        return {'results': [{**(bus_entry.serialize()), **(packge_entry.serialize())} for bus_entry, packge_entry in
+        return {'results': [format_search_response(bus_entry.serialize(), packge_entry.serialize()) for bus_entry, packge_entry in
                             relevant_businesses]}
