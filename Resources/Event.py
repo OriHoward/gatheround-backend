@@ -8,7 +8,13 @@ from server import db
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 
+"""
+//todo: this doesn't work 
+curr_events_hosting: EventRecord = EventRecord.query.join(HostRecord) \
+                .filter(HostRecord.user_id == curr_user_id, EventRecord.event_date > datetime.now()) \
+                .order_by(EventRecord.event_date).limit(args.get("host-limit", 10)).all()
 
+"""
 class Event(Resource):
     @jwt_required()
     def get(self):
@@ -27,8 +33,8 @@ class Event(Resource):
         if is_business is False:
             # get events that user is hosting
             curr_events_hosting: EventRecord = EventRecord.query.join(HostRecord) \
-                .filter(HostRecord.user_id == curr_user_id, EventRecord.event_date > datetime.now()) \
-                .order_by(EventRecord.event_date).limit(args.get("host-limit")).all()
+                .filter(HostRecord.user_id == curr_user_id) \
+                .order_by(EventRecord.event_date).limit(args.get("host-limit", 10)).all()
             # if args.get("host-limit") is not provided- value is None and limit(None) returns all instances
             response_data["my_events"] = list(map(lambda entry: entry.serialize(), curr_events_hosting))
         return response_data
