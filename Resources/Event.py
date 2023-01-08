@@ -15,6 +15,8 @@ curr_events_hosting: EventRecord = EventRecord.query.join(HostRecord) \
                 .order_by(EventRecord.event_date).limit(args.get("host-limit", 10)).all()
 
 """
+
+
 class Event(Resource):
     @jwt_required()
     def get(self):
@@ -49,11 +51,12 @@ class Event(Resource):
 
         name = received_data.get("name")
         formatted_date = datetime.strptime(received_data.get("eventDate"), '%d/%m/%Y %H:%M')
+        category = received_data.get("categoryName")
         address = received_data.get("address")
         description = received_data.get("description")
         limit_attending = received_data.get("limitAttending")
 
-        curr_event: EventRecord = EventRecord(name=name, event_date=formatted_date, address=address,
+        curr_event: EventRecord = EventRecord(name=name, event_date=formatted_date, category=category, address=address,
                                               description=description, limit_attending=limit_attending)
         host_record: HostRecord = HostRecord(event_id=curr_event.id, user_id=current_user.get("id"))
 
