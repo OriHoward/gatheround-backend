@@ -1,7 +1,5 @@
 from server import db
 from enum import Enum
-from Models.UserRecord import UserRecord
-from Models.EventRecord import EventRecord
 from sqlalchemy import ForeignKey
 
 
