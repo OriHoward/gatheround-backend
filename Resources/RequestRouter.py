@@ -1,10 +1,10 @@
 from flask_restful import Resource
 from Models.RequestRecord import RequestRecord
+from Models.RequestNotifRecord import RequestNotifRecord
 from flask import request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from server import db
 from flask import abort
-
 
 
 class RequestRouter(Resource):
@@ -21,11 +21,18 @@ class RequestRouter(Resource):
                                                      RequestRecord.package_id == package_id).all()
         if len(existing_record) > 0:
             abort(409)
-        print(existing_record)
+
+        user_id = get_jwt_identity().get('id')
         request_record: RequestRecord = RequestRecord(package_id=package_id,
                                                       event_id=event_id,
                                                       description=received_data.get("description", "")
                                                       )
+        notif_record = RequestNotifRecord(updated_by=user_id, notify_user=business_id)
+        db.session.begin_nested()
         db.session.add(request_record)
         db.session.commit()
+        notif_record.id = request_record.id
+        db.session.add(notif_record)
+        db.session.commit()
+
         return 200
