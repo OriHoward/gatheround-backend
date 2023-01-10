@@ -9,6 +9,7 @@ class RequestNotifRecord(db.Model):
     notify_user = db.Column(db.Integer, ForeignKey('user_record.id'))
     update_timestamp = db.Column(db.TIMESTAMP, nullable=False, server_default=func.now(),
                                  onupdate=func.current_timestamp())
+    is_acknowledged = db.Column(db.Boolean, default=False, nullable=False)
 
     def serialize(self):
         return {
