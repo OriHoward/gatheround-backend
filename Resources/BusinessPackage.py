@@ -43,7 +43,24 @@ class BusinessPackage(Resource):
 
     @jwt_required()
     def put(self):
-        pass
+        received_data = request.json
+        package_id = received_data.get("packageId")
+        business_id = get_jwt_identity().get("id")
+        business_package: BusinessPackageRecord = BusinessPackageRecord.query.filter_by(id=package_id,
+                                                                                        user_id=business_id).first()
+        if business_package:
+            fields = ["id", "package_name", "description", "currency", "price"]
+            # Iterating through all the fields and updating accordingly if necessary
+            for field in fields:
+                if field in received_data:
+                    # Updates the DataBase
+                    print(field)
+                    print(received_data.get(field))
+                    setattr(business_package, field, received_data.get(field))
+            db.session.commit()
+            return {"status": "updated", "data": business_package.serialize()}
+        else:
+            return {"error": "business package record not found"}
 
     @jwt_required()
     def delete(self):
