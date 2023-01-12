@@ -76,5 +76,18 @@ class Event(Resource):
         db.session.commit()
         return {'status': 'accepted'}, 200
 
+    @jwt_required()
     def put(self):
-        pass
+        """
+        The put request updates the event information in the database.
+        """
+        received_data = request.json
+        event_id = received_data.get('id')
+        curr_event: EventRecord = EventRecord.query.filter_by(id=event_id).first()
+        curr_event.name = received_data.get("name")
+        curr_event.address = received_data.get("address")
+        curr_event.description = received_data.get("description")
+        curr_event.event_date = datetime.strptime(received_data.get("eventDate"), '%d/%m/%Y %H:%M')
+        curr_event.category = received_data.get("category")
+        db.session.commit()
+        return {"status": "accepted"}
