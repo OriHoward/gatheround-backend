@@ -16,6 +16,7 @@ class RequestNotifRecord(db.Model):
             "id": self.id,
             "updated_by": self.updated_by,
             "notify_user": self.notify_user,
-            "update_timestamp": self.update_timestamp,
+            "update_timestamp": self.update_timestamp.timestamp() * 1000,
+            # multiplication makes it so that parsing it works on javascript when passing to "new Date()"
 
         }
