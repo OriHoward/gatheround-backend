@@ -13,5 +13,9 @@ class RequestNotifRecord(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id
+            "id": self.id,
+            "updated_by": self.updated_by,
+            "notify_user": self.notify_user,
+            "update_timestamp": self.update_timestamp,
+
         }
