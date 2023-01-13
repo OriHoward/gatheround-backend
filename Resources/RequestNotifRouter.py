@@ -4,6 +4,8 @@ from flask import request
 from Models.RequestNotifRecord import RequestNotifRecord
 from Models.RequestRecord import RequestRecord
 from Models.EventRecord import EventRecord
+from server import db
+from flask import abort
 
 
 def format_result(notif, event):
@@ -31,3 +33,16 @@ class RequestNotifRouter(Resource):
             .with_entities(EventRecord, RequestNotifRecord).all()
         formatted_notifs = [format_result(notif.serialize(), event.serialize()) for event, notif in notifs]
         return {"notification": formatted_notifs}
+
+    @jwt_required()
+    def put(self):
+        try:
+            current_user = get_jwt_identity()
+            body = request.json
+            record: RequestNotifRecord = RequestNotifRecord.query \
+                .filter_by(id=body.get("notifId")).first()
+            record.is_acknowledged = True
+            db.session.commit()
+            return {"status": "updated"}
+        except:
+            abort(500)
