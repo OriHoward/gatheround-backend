@@ -73,17 +73,15 @@ class RequestRouter(Resource):
         request_id = received_data.get("id")
         updated_by = get_jwt_identity().get("id")
         notify_user = received_data.get("event_user_id")
-        notify_fields = ["updated_by", "notify_user", "is_acknowledged"]
         curr_request: RequestRecord = RequestRecord.query.filter_by(id=request_id).first()
-        curr_notify: RequestNotifRecord = RequestNotifRecord.query.filter_by(request_id=request_id).first()
+        new_notify: RequestNotifRecord = RequestNotifRecord(request_id=request_id, updated_by=updated_by
+                                                            , notify_user=notify_user)
         status = received_data.get("request_status")
-        is_ack = received_data.get("is_acknowledged")
+
         try:
             db.session.begin_nested()
             setattr(curr_request, "request_status", status)
-            setattr(curr_notify, notify_fields[0], updated_by)
-            setattr(curr_notify, notify_fields[1], notify_user)
-            setattr(curr_notify, notify_fields[2], is_ack)
+            db.session.add(new_notify)
             db.session.commit()
             db.session.commit()
             return {"request_status": status}
