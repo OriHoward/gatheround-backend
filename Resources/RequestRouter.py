@@ -1,10 +1,26 @@
 from flask_restful import Resource
 from Models.RequestRecord import RequestRecord
 from Models.RequestNotifRecord import RequestNotifRecord
+from Models.EventRecord import EventRecord
+from Models.BusinessPackageRecord import BusinessPackageRecord
 from flask import request
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from server import db
 from flask import abort
+
+
+def format_result(request, event):
+    return {
+        "id": request.get("id"),
+        "package_id": request.get("package_id"),
+        "event_id": request.get("event_id"),
+        "description": request.get("description"),
+        "request_status": request.get("request_status"),
+        "event_name": event.get("name"),
+        "event_date": event.get("event_date"),
+        "event_category": event.get("category"),
+        "event_address": event.get("address"),
+    }
 
 
 class RequestRouter(Resource):
@@ -36,3 +52,13 @@ class RequestRouter(Resource):
         db.session.commit()
 
         return 200
+
+    @jwt_required()
+    def get(self):
+        user_id = get_jwt_identity().get("id")
+        requests = RequestRecord.query.join(EventRecord, EventRecord.id == RequestRecord.event_id) \
+            .join(BusinessPackageRecord, RequestRecord.package_id == BusinessPackageRecord.id) \
+            .filter(BusinessPackageRecord.user_id == user_id) \
+            .with_entities(RequestRecord, EventRecord).all()
+        formatted_requests = [format_result(req.serialize(), event.serialize()) for req, event in requests]
+        return {"requests": formatted_requests}
