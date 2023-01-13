@@ -23,7 +23,6 @@ class RequestNotifRouter(Resource):
     @jwt_required()
     def get(self):
         current_user = get_jwt_identity()
-        print(current_user)
         notifs = RequestNotifRecord.query \
             .join(RequestRecord, RequestRecord.id == RequestNotifRecord.id) \
             .join(EventRecord, RequestRecord.event_id == EventRecord.id) \

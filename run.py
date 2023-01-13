@@ -9,6 +9,7 @@ from Resources.BusinessPackage import BusinessPackage
 from Resources.RequestRouter import RequestRouter
 from Resources.BookedDates import BookedDates
 from Resources.RequestNotifRouter import RequestNotifRouter
+from Resources.RequestNotifMetaRouter import RequestNotifMetaRouter
 from server import api, app, db
 
 # This initializes the routers
@@ -19,6 +20,7 @@ api.add_resource(Login, '/login')
 api.add_resource(Refresh, '/refresh')
 api.add_resource(RequestRouter, '/requests')
 api.add_resource(RequestNotifRouter, '/request-notifs')
+api.add_resource(RequestNotifMetaRouter, '/notif-meta')
 api.add_resource(Business, '/business')
 api.add_resource(BusinessSearch, '/business-search')
 api.add_resource(BusinessSearchMetadata, '/business-search-meta')
