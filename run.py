@@ -10,6 +10,7 @@ from Resources.RequestRouter import RequestRouter
 from Resources.BookedDates import BookedDates
 from Resources.RequestNotifRouter import RequestNotifRouter
 from Resources.RequestNotifMetaRouter import RequestNotifMetaRouter
+from Resources.Archive import Archive
 from server import api, app, db
 
 # This initializes the routers
@@ -26,6 +27,7 @@ api.add_resource(BusinessSearch, '/business-search')
 api.add_resource(BusinessSearchMetadata, '/business-search-meta')
 api.add_resource(BusinessPackage, '/business-package')
 api.add_resource(BookedDates, '/booked-dates')
+api.add_resource(Archive, '/archive')
 
 if __name__ == '__main__':
     # db.drop_all()
