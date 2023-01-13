@@ -31,7 +31,7 @@ class RequestRouter(Resource):
         db.session.begin_nested()
         db.session.add(request_record)
         db.session.commit()
-        notif_record.id = request_record.id
+        notif_record.request_id = request_record.id
         db.session.add(notif_record)
         db.session.commit()
 

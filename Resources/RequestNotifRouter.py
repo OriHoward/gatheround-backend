@@ -11,6 +11,7 @@ from flask import abort
 def format_result(notif, event):
     return {
         "id": notif.get("id"),
+        "request_id": notif.get("request_id"),
         'event_name': event.get("name"),
         'event_date': event.get('event_date'),
         'address': event.get("address")
@@ -26,7 +27,7 @@ class RequestNotifRouter(Resource):
     def get(self):
         current_user = get_jwt_identity()
         notifs = RequestNotifRecord.query \
-            .join(RequestRecord, RequestRecord.id == RequestNotifRecord.id) \
+            .join(RequestRecord, RequestRecord.id == RequestNotifRecord.request_id) \
             .join(EventRecord, RequestRecord.event_id == EventRecord.id) \
             .filter(
             RequestNotifRecord.is_acknowledged == False, RequestNotifRecord.notify_user == current_user.get("id")) \
@@ -37,7 +38,6 @@ class RequestNotifRouter(Resource):
     @jwt_required()
     def put(self):
         try:
-            current_user = get_jwt_identity()
             body = request.json
             record: RequestNotifRecord = RequestNotifRecord.query \
                 .filter_by(id=body.get("notifId")).first()
