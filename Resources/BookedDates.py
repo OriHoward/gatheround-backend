@@ -12,8 +12,10 @@ class BookedDates(Resource):
     def post(self):
         received_data = request.json  # data sent from front is an array of dictionaries
         user_id = get_jwt_identity().get("id")
+        dates = set()
         for record in received_data:
             formatted_date = datetime.strptime(record.get("date"), '%d/%m/%Y')
+            dates.add(formatted_date)
             category = record.get("category")
             description = record.get("description")
             # check if record is in calendar (frontend sends all dates that are marked)
@@ -23,6 +25,14 @@ class BookedDates(Resource):
                                                description=description)
                 db.session.add(curr_calendar)
                 db.session.commit()
+
+        # delete dates that were unselected
+        records = CalendarRecord.query.filter_by(user_id=user_id).all()
+        for entry in records:
+            if entry.date not in dates:
+                CalendarRecord.query.filter_by(user_id=user_id, date=entry.date).delete()
+                db.session.commit()
+
         return {'status': 'accepted'}
 
     @jwt_required()
