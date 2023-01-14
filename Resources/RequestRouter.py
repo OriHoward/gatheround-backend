@@ -1,4 +1,4 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from Models.RequestRecord import RequestRecord
 from Models.RequestNotifRecord import RequestNotifRecord
 from Models.EventRecord import EventRecord
@@ -57,14 +57,22 @@ class RequestRouter(Resource):
 
     @jwt_required()
     def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('accepted-only', location='args')
+        args = parser.parse_args()
+        args_value = args.get('accepted-only')
         user_id = get_jwt_identity().get("id")
         requests = RequestRecord.query.join(EventRecord, EventRecord.id == RequestRecord.event_id) \
             .join(BusinessPackageRecord, RequestRecord.package_id == BusinessPackageRecord.id) \
-            .join(HostRecord, HostRecord.event_id == EventRecord.id) \
-            .filter(BusinessPackageRecord.user_id == user_id) \
-            .with_entities(RequestRecord, EventRecord, HostRecord).all()
+            .join(HostRecord, HostRecord.event_id == EventRecord.id)
+        if args_value is None:
+            results = requests.filter(BusinessPackageRecord.user_id == user_id) \
+                .with_entities(RequestRecord, EventRecord, HostRecord).all()
+        else:  # get only accepted requests
+            results = requests.filter(BusinessPackageRecord.user_id == user_id, RequestRecord.request_status == 1) \
+                .with_entities(RequestRecord, EventRecord, HostRecord).all()
         formatted_requests = [format_result(req.serialize(), event.serialize(), host.serialize()) for req, event, host
-                              in requests]
+                              in results]
         return {"requests": formatted_requests}
 
     @jwt_required()

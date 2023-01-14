@@ -37,9 +37,6 @@ class BookedDates(Resource):
 
     @jwt_required()
     def get(self):
-        # todo: for filter
-        parser = reqparse.RequestParser()
-
         user_id = get_jwt_identity().get("id")
         booked_dates = CalendarRecord.query \
             .filter(CalendarRecord.user_id == user_id, CalendarRecord.date > datetime.now()) \
