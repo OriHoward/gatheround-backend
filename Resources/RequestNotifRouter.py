@@ -38,11 +38,15 @@ class RequestNotifRouter(Resource):
     @jwt_required()
     def put(self):
         try:
+            current_user = get_jwt_identity()
             body = request.json
             record: RequestNotifRecord = RequestNotifRecord.query \
                 .filter_by(id=body.get("notifId")).first()
             record.is_acknowledged = True
             db.session.commit()
-            return {"status": "updated"}
+            notif_count = RequestNotifRecord.query \
+                .filter(RequestNotifRecord.is_acknowledged == False,
+                        RequestNotifRecord.notify_user == current_user.get("id")).count()
+            return {"notifAmount": notif_count}
         except:
             abort(500)

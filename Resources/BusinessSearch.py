@@ -10,7 +10,7 @@ def format_search_response(business_entry, package_entry):
               "phone_number": business_entry.get("phone_number"), "country": business_entry.get("country"),
               "city": business_entry.get("city"), "package_name": package_entry.get("package_name"),
               "description": package_entry.get("description"), "currency": package_entry.get("currency"),
-              "price": package_entry.get("price")}
+              "price": package_entry.get("price"), "profession":business_entry.get("profession")}
 
     return result
 
