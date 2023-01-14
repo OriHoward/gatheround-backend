@@ -54,8 +54,6 @@ class BusinessPackage(Resource):
             for field in fields:
                 if field in received_data:
                     # Updates the DataBase
-                    print(field)
-                    print(received_data.get(field))
                     setattr(business_package, field, received_data.get(field))
             db.session.commit()
             return {"status": "updated", "data": business_package.serialize()}
